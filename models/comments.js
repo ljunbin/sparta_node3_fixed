@@ -1,12 +1,13 @@
 'use strict';
 const { Model } = require('sequelize');
+
 /**
  * @param {import("sequelize").Sequelize} sequelize - Sequelize
  * @param {import("sequelize").DataTypes} DataTypes - Sequelize Column DataTypes
  * @return {Model} - Sequelize Model
  * **/
 module.exports = (sequelize, DataTypes) => {
-  class Posts extends Model {
+  class Comments extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -18,36 +19,32 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'UserId',
         onDelete: 'CASCADE',
       });
-
-      this.hasMany(models.Likes, {
-        sourceKey: 'postId',
+      this.belongsTo(models.Posts, {
+        targetKey: 'postId',
         foreignKey: 'PostId',
-      });
-      this.hasMany(models.Comments, {
-        sourceKey: 'postId',
-        foreignKey: 'PostId',
+        onDelete: 'CASCADE',
       });
     }
   }
 
-  Posts.init(
+  Comments.init(
     {
-      postId: {
+      commentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
+      PostId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       UserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      title: {
-        type: DataTypes.STRING(40),
-        allowNull: false,
-      },
-      content: {
-        type: DataTypes.STRING(3000),
+      comment: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       createdAt: {
@@ -63,8 +60,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Posts',
+      modelName: 'Comments',
     }
   );
-  return Posts;
+  return Comments;
 };

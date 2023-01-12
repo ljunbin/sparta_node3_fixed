@@ -1,21 +1,21 @@
-const { User } = require("../models");
+const { Users } = require("../models");
 
 class LoginRepository {
 
   findOneId = async (nickname) => {
-    const findOneId = await User.findOne({ where: { nickname } });
+    const findOneId = await Users.findOne({ where: { nickname } });
 
     return findOneId;
   };
 
   findOneUser = async (userId) => {
-    const findOneUser = await User.findOne({ where: { userId } });
+    const findOneUser = await Users.findOne({ where: { userId } });
 
     return findOneUser;
   };
 
   updateRefresh = async (refreshToken, user) => {
-    await User.update({ refreshToken }, { where: { userId: user.userId } });
+    await Users.update({ refreshToken }, { where: { userId: user.userId } });
   };
 }
 

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { Users } = require("../models");
 const { InvalidParamsError } = require('../helper/index.exception');
 
 module.exports = async (req, res, next) => {
@@ -34,7 +34,7 @@ module.exports = async (req, res, next) => {
 
       // 2.access토큰은 만료되었지만 refresh토큰이 존재한다면 accessToken 발급
       if (!accessVerified && refreshVerified) {
-        const existUser = await User.findOne({
+        const existUser = await Users.findOne({
           where: { refreshToken: refreshToken },
         });
 
@@ -62,7 +62,7 @@ module.exports = async (req, res, next) => {
       if (accessVerified && !refreshVerified) {
         const { userId } = accessVerified;
 
-        const existUser = await User.findOne({ where: { userId } });
+        const existUser = await Users.findOne({ where: { userId } });
         if (!existUser) {
           throw new InvalidParamsError(401, '로그인 기한이 만료되었습니다.');
         }
@@ -72,7 +72,7 @@ module.exports = async (req, res, next) => {
         });
         console.log(newRefreshToken, 'newRefreshToken 확인');
 
-        await User.update(
+        await Users.update(
           { refreshToken: newRefreshToken },
           { where: { userId } }
         );
@@ -87,12 +87,13 @@ module.exports = async (req, res, next) => {
 
       if (accessVerified && refreshVerified) {
         const { userId } = accessVerified;
-        User.findOne({
+        Users.findOne({
           where: { userId },
           attributes: ['userId', 'nickname'],
         }).then((user) => {
           
           res.locals.user = user;
+          console.log(user)
           next();
         });
       }

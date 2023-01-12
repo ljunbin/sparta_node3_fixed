@@ -1,26 +1,26 @@
 // repositories/posts.repository.js
 
-const { Post } = require('../models');
+const { Posts } = require('../models');
 
 class PostRepository {
 
   //게시글 전체조회
   findAllPost = async () => {
-    const posts = await Post.findAll();
+    const posts = await Posts.findAll();
 
     return posts;
   }
 
   //게시글 하나조회
   findOnePost = async (postId) =>{
-    const postOne = await Post.findByPk(postId);
+    const postOne = await Posts.findByPk(postId);
     return postOne;
   }
 
   //게시글 생성
-  createPost = async ({ title, content, nickname,  userId }) => {
-    const createPostData = await Post.create({
-      userId: userId,
+  createPost = async ({ title, content, nickname,userId }) => {
+    const createPostData = await Posts.create({
+      UserId: userId,
       title: title,
       nickname: nickname,
       content:content,

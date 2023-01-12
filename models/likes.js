@@ -6,7 +6,7 @@ const { Model } = require('sequelize');
  * @return {Model} - Sequelize Model
  * **/
 module.exports = (sequelize, DataTypes) => {
-  class Posts extends Model {
+  class Likes extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -18,36 +18,28 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'UserId',
         onDelete: 'CASCADE',
       });
-
-      this.hasMany(models.Likes, {
-        sourceKey: 'postId',
+      this.belongsTo(models.Posts, {
+        targetKey: 'postId',
         foreignKey: 'PostId',
-      });
-      this.hasMany(models.Comments, {
-        sourceKey: 'postId',
-        foreignKey: 'PostId',
+        onDelete: 'CASCADE',
       });
     }
   }
 
-  Posts.init(
+  Likes.init(
     {
-      postId: {
+      likeId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      UserId: {
+      PostId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      title: {
-        type: DataTypes.STRING(40),
-        allowNull: false,
-      },
-      content: {
-        type: DataTypes.STRING(3000),
+      UserId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       createdAt: {
@@ -63,8 +55,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Posts',
+      modelName: 'Likes',
     }
   );
-  return Posts;
+  return Likes;
 };
